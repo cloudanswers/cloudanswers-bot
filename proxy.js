@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const SmeeClient = require('smee-client');
 
 const smee = new SmeeClient({
