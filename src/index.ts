@@ -1,15 +1,50 @@
-import { Probot } from "probot";
+import { Probot } from 'probot';
+import {
+  notifyAssignee,
+  updateLabelsForAssignedIssue,
+  updateLabelsForNewIssue
+} from 'src/issue';
+import {
+  addAdminReviewersToPullRequest,
+  addLabelsToNewPullRequest,
+  addReviewersToPullRequest,
+  checkIfPullRequestIsValid,
+  thankPullRequestAuthor
+} from 'src/pullRequest';
+import { addLabelsToRepo } from 'src/repository';
 
 export = (app: Probot) => {
-  app.on("issues.opened", async (context) => {
-    const issueComment = context.issue({
-      body: "Thanks for opening this issue!",
-    });
-    await context.octokit.issues.createComment(issueComment);
-  });
-  // For more information on building apps:
-  // https://probot.github.io/docs/
+  app.log.info('Starting Probot');
 
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
+  app.on('issues.opened', async (context) => {
+    await updateLabelsForNewIssue({ app, context });
+  });
+
+  app.on('issues.assigned', async (context) => {
+    await updateLabelsForAssignedIssue({ app, context });
+    await notifyAssignee({ app, context });
+  });
+
+  app.on('pull_request.opened', async (context) => {
+    if (await checkIfPullRequestIsValid({ app, context })) {
+      await addReviewersToPullRequest({ app, context });
+      await addLabelsToNewPullRequest({ app, context });
+    }
+  });
+
+  app.on('pull_request.closed', async (context) => {
+    await thankPullRequestAuthor({ app, context });
+  });
+
+  app.on('pull_request_review.submitted', async (context) => {
+    await addAdminReviewersToPullRequest({ app, context });
+  });
+
+  app.on('repository', async (context) => {
+    await addLabelsToRepo({ app, context });
+  });
+
+  app.onError((event) => {
+    app.log.error(event.message);
+  });
 };
