@@ -5,6 +5,7 @@ npm-debug.log
 .env
 coverage
 lib
+.eslintcache
 
 # Local Netlify folder
 .netlify
