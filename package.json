@@ -20,10 +20,10 @@
     "start": "probot run ./lib/index.js",
     "test": "jest",
     "prepare": "husky install",
-    "format-check": "prettier \"src/**/*.{ts,js,json}\" --ignore-path .gitignore --check",
-    "format-fix": "prettier \"src/**/*.{ts,js,json}\" --ignore-path .gitignore --write",
-    "lint-check": "eslint . --ext \"src/**/*.{ts,js,json}\" --ignore-path .gitignore --cache",
-    "lint-fix": "eslint . --ext \"src/**/*.{ts,js,json}\" --ignore-path .gitignore --cache --fix",
+    "format-check": "prettier \"{src,functions}/**/*.{ts,js,json}\" --ignore-path .gitignore --check",
+    "format-fix": "prettier \"{src,functions}/**/*.{ts,js,json}\" --ignore-path .gitignore --write",
+    "lint-check": "eslint \"{src,functions}/**/*.{ts,js,json}\" --ignore-path .gitignore --cache",
+    "lint-fix": "eslint \"{src,functions}/**/*.{ts,js,json}\" --ignore-path .gitignore --cache --fix",
     "pre-commit": "lint-staged"
   },
   "commitlint": {
